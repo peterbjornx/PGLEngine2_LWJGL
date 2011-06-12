@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Lightweight Java Game Library">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Librarys/lwjgl-2.7.1/jar/lwjgl_util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Librarys/lwjgl-2.7.1/jar/lwjgl.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../Librarys/lwjgl-2.7.1/src/java" />
+    </SOURCES>
+  </library>
+</component>
