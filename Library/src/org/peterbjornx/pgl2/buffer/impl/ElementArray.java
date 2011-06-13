@@ -28,7 +28,7 @@ public class ElementArray implements ElementBuffer{
      * @param maxSize Maximal amount of polygons this buffer may store
      * @param drawMode The OpenGL drawing mode to use
      */
-    public ElementArray(int maxSize,int drawMode) throws PglException {
+    public ElementArray(int maxSize,int drawMode) {
         this.elementBuffer = ByteBuffer.allocateDirect(maxSize*sizeof()*4);
         this.drawMode = drawMode;
     }
