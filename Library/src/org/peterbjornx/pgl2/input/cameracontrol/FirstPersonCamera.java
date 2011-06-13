@@ -10,11 +10,13 @@ import org.peterbjornx.pgl2.math.VectorMath;
 
 import static java.lang.Math.*;
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/10/11
  * Time: 12:29 AM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * Implements a first person WASD camera. <BR/>
+ * Camera controls are  :WASD- Movement, Mouse-Rotation,IL-Look sensitivity,OL- Walkspeed
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public class FirstPersonCamera implements CameraControl{
 
@@ -22,6 +24,10 @@ public class FirstPersonCamera implements CameraControl{
     private float walkSpeed = 0.005f;
     private boolean lookDirty = true;
 
+    /**
+     * Handles user input and moves the camera accordingly
+     * @param camera The camera to manipulate
+     */
     public void handleInput(Camera camera) {
         if (camera == null)
             return;//TODO: Decide if we need to throw exception

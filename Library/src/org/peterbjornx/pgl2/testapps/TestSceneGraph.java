@@ -1,14 +1,9 @@
 package org.peterbjornx.pgl2.testapps;
 
-import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.peterbjornx.pgl2.camera.Camera;
 import org.peterbjornx.pgl2.geom.CubeNode;
 import org.peterbjornx.pgl2.input.cameracontrol.FirstPersonCamera;
-import org.peterbjornx.pgl2.model.Node;
 import org.peterbjornx.pgl2.util.SimpleApplication;
 
 /**
@@ -17,6 +12,7 @@ import org.peterbjornx.pgl2.util.SimpleApplication;
  * Date: 6/9/11
  * Time: 8:16 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public class TestSceneGraph extends SimpleApplication{
     private FirstPersonCamera fpsCamera = new FirstPersonCamera();
@@ -26,7 +22,7 @@ public class TestSceneGraph extends SimpleApplication{
 
     @Override
     protected void init() {
-        initializeLWJGL(1200,600);
+        initializePGLEngine(1200, 600);
         CubeNode cube = new CubeNode();
         cube.setPosition(new Vector3f(0.5f,4.0f,0.2f));
         scene.add(cube);

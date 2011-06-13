@@ -6,13 +6,18 @@ import org.peterbjornx.pgl2.model.GeometryNode;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/9/11
  * Time: 8:19 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * A simple node that renders a coloured cube sized 2x2x2
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public class CubeNode extends GeometryNode {
+    /**
+     * Renders the cube
+     * @param cam The camera that is rendering this node.
+     */
     @Override
     protected void renderGeometry(Camera cam) {
         glBegin(GL_QUADS);

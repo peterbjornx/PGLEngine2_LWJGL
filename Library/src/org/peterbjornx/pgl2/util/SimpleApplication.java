@@ -11,18 +11,24 @@ import org.peterbjornx.pgl2.camera.Camera;
 import org.peterbjornx.pgl2.model.Node;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/10/11
  * Time: 12:18 AM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * Provides a easy way to create a PGLEngine application, and handles one camera and the root node for you
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public abstract class SimpleApplication {
 
     protected Node scene;
     protected Camera camera;
 
-    protected void initializeLWJGL(int width, int height) {
+    /**
+     * Initialize PGLEngine
+     * @param width Display width
+     * @param height Display height
+     */
+    protected void initializePGLEngine(int width, int height) {
         try {
             Display.setDisplayMode(new DisplayMode(width, height));
             Display.create();
@@ -40,10 +46,19 @@ public abstract class SimpleApplication {
         }
     }
 
+    /**
+     * This method is called when the application is launched
+     */
     protected abstract void init();
 
+    /**
+     * This method is called every frame before rendering starts
+     */
     protected abstract void preRender();
 
+    /**
+     * The entry point for this SimpleApplication
+     */
     protected void main(){
         init();
         while (!Display.isCloseRequested()) {

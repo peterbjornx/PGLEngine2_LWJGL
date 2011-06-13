@@ -13,6 +13,7 @@ import static org.lwjgl.opengl.ARBBufferObject.*;
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
  *
  * Keeps track of server (GPU or in case of software GL CPU) memory and executes off-thread deletion requests
+ * @author Peter Bosch (AKA Peterbjorn)
  *
  */
 public class ServerMemoryManager {

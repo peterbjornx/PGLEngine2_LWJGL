@@ -7,16 +7,24 @@ import org.lwjgl.util.vector.Vector3f;
 import static java.lang.Math.*;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/9/11
  * Time: 12:46 AM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ *
+ * Implements some common math on Vectors, Quaternions and Matrices that isn't implemented by LWJGL
+ * Note: All rotations are in degrees
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public class VectorMath {
 
+    /**
+     * Creates a quaternion representing a axis-angle rotation
+     * @param axis The axis of the rotation
+     * @param angle The angle of the rotation
+     * @return The quaternion that represents the given rotation
+     */
     public static Quaternion axisAngleToQuaternion(Vector3f axis, float angle)
-
     {
         Quaternion quat = new Quaternion(1, 0, 0, 0);
         float sinAngle;
@@ -32,6 +40,11 @@ public class VectorMath {
         return quat;
     }
 
+    /**
+     * Creates a quaternion representing a euler angle rotation
+     * @param eulerAngles The euler angles
+     * @return The quaternion that represents the given rotation
+     */
     public static Quaternion eulerAnglesToQuaternion(Vector3f eulerAngles) {
         Quaternion quat = new Quaternion(1, 0, 0, 0);
         double p = Math.toRadians(eulerAngles.x) / 2.0;
@@ -50,6 +63,12 @@ public class VectorMath {
         return quat.normalise(null);
     }
 
+    /**
+     * Rotate the given vector by the given quaternion
+     * @param left The quaternion describing the rotation
+     * @param right The vector to rotate
+     * @return The rotated vector
+     */
     public static Vector3f quatRotate(Quaternion left, Vector3f right) {
         Quaternion vecQuat = new Quaternion(right.x, right.y, right.z, 0.0f);
         Quaternion resQuat;
@@ -58,6 +77,11 @@ public class VectorMath {
         return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
     }
 
+    /**
+     * Creates a matrix that represents the rotation described by the quaternion
+     * @param quat The quaternion describing the rotation
+     * @return The matrix, in column-major format for OpenGL
+     */
     public static Matrix4f matrixForQuaternion(Quaternion quat) {
         float x2 = quat.x * quat.x;
         float y2 = quat.y * quat.y;
@@ -96,6 +120,12 @@ public class VectorMath {
         return matrix;
     }
 
+    /**
+     * Multiplies two vectors (An * Bn = Cn)
+     * @param left Vector A to multiply with vector B
+     * @param right Vector B to multiply vector A with
+     * @return The result of the vector multiplication
+     */
     public static Vector3f mult(Vector3f left, Vector3f right) {
         return new Vector3f(left.x * right.x, left.y * right.y, left.z * right.z);
     }

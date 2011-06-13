@@ -13,11 +13,12 @@ import org.peterbjornx.pgl2.model.Node;
 import java.nio.FloatBuffer;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/9/11
  * Time: 2:03 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * Implements a positionable, orientable camera.
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public class Camera extends Node {
     /* Multi-Camera Fields */
@@ -31,6 +32,11 @@ public class Camera extends Node {
     /* Matrix fields */
     private Matrix4f projectionMatrix = new Matrix4f();
 
+    /**
+     * Renders the scene from this cameras perspective.
+     * @param cam The camera that is rendering this node.
+     * When the camera parameter is not null this camera will not render the scene
+     */
     public void render(Camera cam){
         /* If we are being rendered by a camera or inactive, don't start rendering our view */
         if (cam != null ||  !active){
@@ -106,47 +112,87 @@ public class Camera extends Node {
         glPopMatrix();
     }
 
+    /**
+     * Loads the viewing matrix for this camera, to be called prior to any rendering
+     */
     public void loadViewMatrix() {
         glScalef(1,1,-1);
         glRotateq(getAbsoluteRotation());
         glTranslatevf((Vector3f) getAbsolutePosition().negate());
     }
 
+    /**
+     * Gets the screen coordinates of this cameras viewport
+     * @return the screen coordinates of this cameras viewport
+     */
     public Vector2f getViewportPosition() {
         return viewportPosition;
     }
 
+    /**
+     * Gets the dimensions of this camera's viewport
+     * @return The dimensions of this camera's viewport
+     */
     public Vector2f getViewportSize() {
         return viewportSize;
     }
 
+    /**
+     * Sets this camera's viewport
+     * @param position The screen coordinates of the viewport
+     * @param size The dimensions of the viewport
+     */
     public void setViewport(Vector2f position, Vector2f size) {
         this.viewportPosition = position;
         this.viewportSize = size;
     }
 
+    /**
+     * Gets this camera's far clipping plane
+     * @return This camera's far clipping plane
+     */
     public float getFarClip() {
         return farClip;
     }
 
+    /**
+     * Sets this camera's far clipping plane
+     * @param farClip This camera's far clipping plane
+     */
     public void setFarClip(float farClip) {
         this.farClip = farClip;
         updateProjectionMatrix();
     }
 
+    /**
+     * Gets this camera's near clipping plane
+     * @return This camera's near clipping plane
+     */
     public float getNearClip() {
         return nearClip;
     }
 
+    /**
+     * Sets this camera's near clipping plane
+     * @param nearClip This camera's near clipping plane
+     */
     public void setNearClip(float nearClip) {
         this.nearClip = nearClip;
         updateProjectionMatrix();
     }
 
+    /**
+     * Returns whether this camera is active.
+     * @return True if this is camera active.
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Enables or disables this camera
+     * @param active is this camera active?
+     */
     public void setActive(boolean active) {
         this.active = active;
     }

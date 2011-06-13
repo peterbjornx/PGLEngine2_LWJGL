@@ -14,11 +14,12 @@ import java.nio.ByteOrder;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/13/11
  * Time: 2:29 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * Element buffer implementation that uses ARB VBO's
+ * @author Peter Bosch (AKA Peterbjorn)
  */
 public class ArbElementBuffer implements ElementBuffer {
     private ByteBuffer elementBuffer;
@@ -28,6 +29,12 @@ public class ArbElementBuffer implements ElementBuffer {
     private int polygonCount = 0;
     private int serverMemoryUsage = 0;
 
+    /**
+     * Creates a new ARB element buffer
+     * @param maxSize Maximal amount of polygons this buffer may store
+     * @param drawMode The OpenGL drawing mode to use
+     * @throws PglException When the card does not support ARB VBOs
+     */
     public ArbElementBuffer(int maxSize,int drawMode) throws PglException {
         if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
             throw new PglException("Card does not support ARB VBOs");
@@ -50,6 +57,9 @@ public class ArbElementBuffer implements ElementBuffer {
         return 1;
     }
 
+    /**
+     * Activates this buffer
+     */
     public void bind() {
        glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vboPtr);
         if (!dataTransferred){
@@ -62,18 +72,33 @@ public class ArbElementBuffer implements ElementBuffer {
         }
     }
 
+    /**
+     * Enables this buffer's capabilities
+     */
     public void enable() {
         glEnableClientState(GL_ELEMENT_ARRAY_BUFFER_ARB);
     }
 
+    /**
+     * Disables this buffer's capabilities
+     */
     public void disable() {
         glDisableClientState(GL_ELEMENT_ARRAY_BUFFER_ARB);
     }
 
+    /**
+     * Renders the contents of this element buffer.
+     * Note: requires that the element and geometry buffers have been bound and enabled
+     */
     public void draw(){
         glDrawElements(drawMode, sizeof()*polygonCount, GL_UNSIGNED_INT, 0);
     }
 
+    /**
+     * Add an polygon (element) to this buffer
+     * @param points The vertex indices describing this polygon
+     * @throws PglException When this buffer is already uploaded<BR/> to the server or when the polygon index count doesn't match current drawing mode
+     */
     public void addPolygon(List<Integer> points) throws PglException {
         if (dataTransferred)
             throw new PglException("Tried to modify uploaded element buffer");
