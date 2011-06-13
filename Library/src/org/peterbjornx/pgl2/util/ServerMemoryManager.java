@@ -99,7 +99,7 @@ public class ServerMemoryManager {
      * @param glId OpenGL ID for the VBO.
      * @param serverSize VBO size in server memory
      */
-    public void requestARBBufferDeletion(int glId, int serverSize){
+    public static void requestARBBufferDeletion(int glId, int serverSize){
         arbBufferDeleteQueue.add(new DeletionRequest(glId,serverSize));
     }
 
@@ -108,7 +108,7 @@ public class ServerMemoryManager {
      * @param glId OpenGL ID for the texture.
      * @param serverSize Texture size in server memory
      */
-    public void requestTextureDeletion(int glId, int serverSize){
+    public static void requestTextureDeletion(int glId, int serverSize){
         textureDeleteQueue.add(new DeletionRequest(glId,serverSize));
     }
 
@@ -117,7 +117,7 @@ public class ServerMemoryManager {
      * @param glId OpenGL ID for the GUI texture.
      * @param serverSize GUI texture size in server memory
      */
-    public void requestImageDeletion(int glId, int serverSize){
+    public static void requestImageDeletion(int glId, int serverSize){
         imageDeleteQueue.add(new DeletionRequest(glId,serverSize));
     }
 
