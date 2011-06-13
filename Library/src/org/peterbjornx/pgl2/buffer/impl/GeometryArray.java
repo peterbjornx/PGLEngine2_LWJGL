@@ -1,48 +1,38 @@
 package org.peterbjornx.pgl2.buffer.impl;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.ARBVertexBufferObject.*;
-
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector3f;
 import org.peterbjornx.pgl2.buffer.GeometryBuffer;
 import org.peterbjornx.pgl2.util.PglException;
-import org.peterbjornx.pgl2.util.ServerMemoryManager;
 
 import java.nio.ByteBuffer;
+
+import static org.lwjgl.opengl.GL11.*;
 
 /**
  * User: Peter
  * Date: 6/13/11
- * Time: 1:48 PM
+ * Time: 3:07 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
- * ARB VBO geometry buffer implementation
  *
  * @author Peter Bosch (AKA Peterbjorn)
  */
-public class ARBGeometryBuffer implements GeometryBuffer {
+public class GeometryArray implements GeometryBuffer {
     private ByteBuffer vertexBuffer;
     private boolean use3DTextures;
-    private int vboPtr;
     private int vertexCount = 0;
     private boolean dataTransferred = false;
-    private int serverMemoryUsage = 0;
 
     /**
-     * Creates a new ARB geometry buffer
+     * Creates a new vertex array geometry buffer
      *
      * @param maxSize       Maximal amount of vertices this buffer may store
      * @param use3DTextures If the W texture coordinate should be enabled
-     * @throws PglException When the card does not support ARB VBOs
      */
-    public ARBGeometryBuffer(int maxSize, boolean use3DTextures) throws PglException {
-        if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
-            throw new PglException("Card does not support ARB VBOs");
+    public GeometryArray(int maxSize, boolean use3DTextures) {
         this.use3DTextures = use3DTextures;
         vertexBuffer = BufferUtils.createByteBuffer(maxSize * (use3DTextures ? 52 : 48));
-        vboPtr = glGenBuffersARB();
     }
 
     /**
@@ -56,7 +46,7 @@ public class ARBGeometryBuffer implements GeometryBuffer {
      */
     public void addVertex(Vector3f pos, Vector3f normal, Vector3f texCoord, Color colour) throws PglException {
         if (dataTransferred)
-            throw new PglException("Tried to modify uploaded VBO");
+            throw new PglException("Tried to modify flipped vertex array");
         vertexBuffer.putFloat(pos.getX());
         vertexBuffer.putFloat(pos.getY());
         vertexBuffer.putFloat(pos.getZ()); //12 0
@@ -87,19 +77,18 @@ public class ARBGeometryBuffer implements GeometryBuffer {
      * Activates this buffer
      */
     public void bind() {
-        glBindBufferARB(GL_ARRAY_BUFFER_ARB, vboPtr);
         if (!dataTransferred) {
             dataTransferred = true;
             vertexBuffer.flip();
-            serverMemoryUsage = vertexBuffer.limit();
-            glBufferDataARB(GL_ARRAY_BUFFER_ARB, vertexBuffer, GL_STATIC_DRAW_ARB);
-            ServerMemoryManager.arbBufferMemory += serverMemoryUsage;
-            vertexBuffer = null;
         }
-        glVertexPointer(3, GL_FLOAT, use3DTextures ? 52 : 48, 0);
-        glNormalPointer(GL_FLOAT, use3DTextures ? 52 : 48, 12);
-        glTexCoordPointer(use3DTextures ? 3 : 2, GL_FLOAT, use3DTextures ? 52 : 48, 24);
-        glColorPointer(4, GL_FLOAT, use3DTextures ? 52 : 48, use3DTextures ? 36 : 32);
+        vertexBuffer.position(0);
+        glVertexPointer(3, use3DTextures ? 52 : 48, vertexBuffer.asFloatBuffer());
+        vertexBuffer.position(12);
+        glNormalPointer(use3DTextures ? 52 : 48, vertexBuffer.asFloatBuffer());
+        vertexBuffer.position(24);
+        glTexCoordPointer(use3DTextures ? 3 : 2, use3DTextures ? 52 : 48, vertexBuffer.asFloatBuffer());
+        vertexBuffer.position(use3DTextures ? 36 : 32);
+        glColorPointer(4, use3DTextures ? 52 : 48, vertexBuffer.asFloatBuffer());
     }
 
     /**
@@ -120,12 +109,5 @@ public class ARBGeometryBuffer implements GeometryBuffer {
         glDisableClientState(GL_NORMAL_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        vertexBuffer = null;
-        ServerMemoryManager.requestARBBufferDeletion(vboPtr, serverMemoryUsage);
     }
 }

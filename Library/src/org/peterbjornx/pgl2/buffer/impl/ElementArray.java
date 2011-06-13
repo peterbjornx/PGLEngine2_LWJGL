@@ -1,8 +1,5 @@
 package org.peterbjornx.pgl2.buffer.impl;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.ARBVertexBufferObject.*;
-
 import org.lwjgl.opengl.GLContext;
 import org.peterbjornx.pgl2.buffer.ElementBuffer;
 import org.peterbjornx.pgl2.util.PglException;
@@ -11,33 +8,28 @@ import org.peterbjornx.pgl2.util.ServerMemoryManager;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.*;
+
 /**
+ * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/13/11
- * Time: 2:29 PM
+ * Time: 5:25 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
- * Element buffer implementation that uses ARB VBO's
- * @author Peter Bosch (AKA Peterbjorn)
  */
-public class ArbElementBuffer implements ElementBuffer {
+public class ElementArray implements ElementBuffer{
     private ByteBuffer elementBuffer;
-    private int vboPtr;
     private boolean dataTransferred = false;
     private int drawMode;
     private int polygonCount = 0;
-    private int serverMemoryUsage = 0;
 
     /**
-     * Creates a new ARB element buffer
+     * Creates a new element array
      * @param maxSize Maximal amount of polygons this buffer may store
      * @param drawMode The OpenGL drawing mode to use
-     * @throws PglException When the card does not support ARB VBOs
      */
-    public ArbElementBuffer(int maxSize,int drawMode) throws PglException {
-        if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
-            throw new PglException("Card does not support ARB VBOs");
+    public ElementArray(int maxSize,int drawMode) throws PglException {
         this.elementBuffer = ByteBuffer.allocateDirect(maxSize*sizeof()*4);
-        vboPtr = glGenBuffersARB();
         this.drawMode = drawMode;
     }
 
@@ -59,33 +51,30 @@ public class ArbElementBuffer implements ElementBuffer {
      * Activates this buffer
      */
     public void bind() {
-       glBindBufferARB(GL_ELEMENT_ARRAY_BUFFER_ARB, vboPtr);
         if (!dataTransferred){
             dataTransferred = true;
             elementBuffer.flip();
-            serverMemoryUsage = elementBuffer.limit();
-            glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, elementBuffer, GL_STATIC_DRAW_ARB);
-            ServerMemoryManager.arbBufferMemory += serverMemoryUsage;
-            elementBuffer = null;
         }
     }
 
     /**
      * Enables this buffer's capabilities
      */
-    public void enable() {}
+    public void enable() {
+    }
 
     /**
      * Disables this buffer's capabilities
      */
-    public void disable() {}
+    public void disable() {
+    }
 
     /**
      * Renders the contents of this element buffer.
      * Note: requires that the element and geometry buffers have been bound and enabled
      */
     public void draw(){
-        glDrawElements(drawMode, sizeof()*polygonCount, GL_UNSIGNED_INT, 0);
+        glDrawElements(drawMode, elementBuffer.asIntBuffer());
     }
 
     /**
@@ -104,12 +93,5 @@ public class ArbElementBuffer implements ElementBuffer {
                 return;
             elementBuffer.putInt(points.remove(0));
         }
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        elementBuffer = null;
-        ServerMemoryManager.requestARBBufferDeletion(vboPtr, serverMemoryUsage);
     }
 }
