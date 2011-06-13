@@ -15,4 +15,9 @@ public class PortabilityUtils {
         int f_l = Integer.reverseBytes(f_b);
         data.putInt(f_l);
     }
+
+    public static void putIntLE(ByteBuffer data, int f_b) {
+        int f_l = Integer.reverseBytes(f_b);
+        data.putInt(f_l);
+    }
 }
