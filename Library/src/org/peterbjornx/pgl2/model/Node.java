@@ -20,7 +20,8 @@ import java.util.LinkedList;
 public class Node {
     /* Start of tree fields */
     private LinkedList<Node> children = new LinkedList<Node>();
-    private Node parent = null;
+    protected Node parent = null;
+
     /* Start of World fields */
     private Vector3f position = new Vector3f(0,0,0);
     protected Quaternion rotation = new Quaternion(0,0,0,1);// Identity
