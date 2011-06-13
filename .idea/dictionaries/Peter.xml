@@ -1,6 +1,8 @@
 <component name="ProjectDictionaryState">
   <dictionary name="Peter">
     <words>
+      <w>endian</w>
+      <w>lwjgl</w>
       <w>modelview</w>
       <w>mult</w>
       <w>quat</w>
