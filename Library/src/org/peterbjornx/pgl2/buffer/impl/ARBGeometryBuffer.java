@@ -16,13 +16,14 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Peter
  * Date: 6/13/11
  * Time: 1:48 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
+ * ARB VBO geometry buffer implementation
+ * @author Peter Bosch (AKA Peterbjorn)
  */
-public class ArbGeometryBuffer implements GeometryBuffer{
+public class ARBGeometryBuffer implements GeometryBuffer{
     private ByteBuffer vertexBuffer;
     private boolean use3DTextures;
     private int vboPtr;
@@ -30,7 +31,13 @@ public class ArbGeometryBuffer implements GeometryBuffer{
     private boolean dataTransferred = false;
     private int serverMemoryUsage = 0;
 
-    public ArbGeometryBuffer(int maxSize,boolean use3DTextures) throws PglException {
+    /**
+     * Creates a new ARB geometry buffer
+     * @param maxSize Maximal amount of vertices this buffer may store
+     * @param use3DTextures If the W texture coordinate should be enabled
+     * @throws PglException When the card does not support ARB VBOs
+     */
+    public ARBGeometryBuffer(int maxSize, boolean use3DTextures) throws PglException {
         if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
             throw new PglException("Card does not support ARB VBOs");
         this.use3DTextures = use3DTextures;
@@ -38,6 +45,14 @@ public class ArbGeometryBuffer implements GeometryBuffer{
         vboPtr = glGenBuffersARB();
     }
 
+    /**
+     * Adds a vertex to the geometry buffer with the given values
+     * @param pos The position of this vertex
+     * @param normal The normal vector for this vector
+     * @param texCoord The texture coordinates for this vector
+     * @param colour This vector's colour
+     * @throws PglException When an attempt is made to write to a geometry buffer already uploaded to the server
+     */
     public void addVertex(Vector3f pos, Vector3f normal, Vector3f texCoord, Color colour) throws PglException {
         if (dataTransferred)
             throw new PglException("Tried to modify uploaded VBO");
@@ -76,10 +91,17 @@ public class ArbGeometryBuffer implements GeometryBuffer{
         }
     }
 
+    /**
+     * Gets the amount of vertices in the buffer
+     * @return The amount of vertices in the buffer
+     */
     public int getVertexCount() {
         return vertexCount;
     }
 
+    /**
+     * Activates this buffer
+     */
     public void bind() {
         glBindBufferARB(GL_ARRAY_BUFFER_ARB,vboPtr);
         if(!dataTransferred){
@@ -96,6 +118,9 @@ public class ArbGeometryBuffer implements GeometryBuffer{
         glColorPointer(4, GL_FLOAT, use3DTextures ? 52 : 48, use3DTextures ? 36 : 32);
     }
 
+    /**
+     * Enables this buffer's capabilities
+     */
     public void enable() {
         glEnableClientState(GL_VERTEX_ARRAY);
         glEnableClientState(GL_NORMAL_ARRAY);
@@ -103,6 +128,9 @@ public class ArbGeometryBuffer implements GeometryBuffer{
         glEnableClientState(GL_COLOR_ARRAY);
     }
 
+    /**
+     * Disables this buffer's capabilities
+     */
     public void disable() {
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_NORMAL_ARRAY);
