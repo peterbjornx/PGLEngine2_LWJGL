@@ -5,6 +5,7 @@
       <w>mult</w>
       <w>quat</w>
       <w>rotateq</w>
+      <w>sizeof</w>
       <w>transformvf</w>
       <w>translatevf</w>
     </words>
