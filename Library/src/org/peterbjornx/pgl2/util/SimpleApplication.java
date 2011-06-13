@@ -65,6 +65,7 @@ public abstract class SimpleApplication {
             preRender();
             scene.render(null);
             Display.update();
+            ServerMemoryManager.processQueues();
         }
         Display.destroy();
     }
