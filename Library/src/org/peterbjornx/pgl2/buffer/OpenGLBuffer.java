@@ -11,6 +11,4 @@ public interface OpenGLBuffer {
     void bind();
     void enable();
     void disable();
-    void cleanupClientMemory();
-    void cleanupServerMemory();
 }

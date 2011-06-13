@@ -1,5 +1,7 @@
 package org.peterbjornx.pgl2.buffer;
 
+import org.peterbjornx.pgl2.util.PglException;
+
 import java.util.List;
 
 /**
@@ -9,7 +11,7 @@ import java.util.List;
  * Time: 9:31 PM
  * Computer: Peterbjornx-PC.rootdomain.asn.local (192.168.178.27)
  */
-public interface ElementBuffer {
-    void addPolygon(List<Integer> points);
+public interface ElementBuffer extends OpenGLBuffer{
+    void addPolygon(List<Integer> points) throws PglException;
     void draw();
 }
