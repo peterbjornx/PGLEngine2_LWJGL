@@ -6,6 +6,7 @@ import org.peterbjornx.pgl2.camera.Camera;
 import org.peterbjornx.pgl2.camera.RenderControl;
 import org.peterbjornx.pgl2.math.VectorMath;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 
 /**
@@ -87,7 +88,7 @@ public class Node {
         if (parent == null)
             return position;
         Vector3f rotatedLocal = VectorMath.quatRotate(parent.getAbsoluteRotation(),position);
-        return Vector3f.add(parent.getAbsolutePosition(),rotatedLocal,null);
+        return Vector3f.add(parent.getAbsolutePosition(), rotatedLocal, null);
     }
 
     /**
@@ -136,6 +137,19 @@ public class Node {
      */
     public LinkedList<Node> getChildren() {
         return children;
+    }
+
+    /**
+     * Gets a list of this node's children that are of type T
+     * @param t Child type
+     * @return A list of this node's children that are of type T
+     */
+    public LinkedList<Node> getChildrenByType(Class t) {
+        LinkedList<Node> _t_children = new LinkedList<Node>();
+        for (Node n : children)
+            if (n != null && n.getClass() == t)
+                _t_children.add(n);
+        return _t_children;
     }
 
 }

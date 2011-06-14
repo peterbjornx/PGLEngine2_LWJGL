@@ -24,4 +24,16 @@ public class TileNode extends Node{
     public void setParent(TileManagerNode parent) {
         this.parent = parent;
     }
+
+    public int getTileX() {
+        return tileX;
+    }
+
+    public int getTileY() {
+        return tileY;
+    }
+
+    public int getTileZ() {
+        return tileZ;
+    }
 }
