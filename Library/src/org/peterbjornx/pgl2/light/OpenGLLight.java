@@ -27,6 +27,7 @@ public class OpenGLLight {
      * Loads the light's values into the OpenGL light state.
      */
     public void loadValues(){
+
         glLight(GL_LIGHT0 + id,GL_AMBIENT,getColour4fBuffer(ambient));
         glLight(GL_LIGHT0 + id,GL_DIFFUSE,getColour4fBuffer(diffuse));
         glLight(GL_LIGHT0 + id,GL_SPECULAR,getColour4fBuffer(specular));

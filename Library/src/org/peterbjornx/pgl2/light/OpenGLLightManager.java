@@ -1,5 +1,9 @@
 package org.peterbjornx.pgl2.light;
 
+import org.peterbjornx.pgl2.camera.Camera;
+
+import static org.lwjgl.opengl.GL11.*;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Peter
@@ -12,6 +16,7 @@ public class OpenGLLightManager {
     private OpenGLLight[] openGLLights = new OpenGLLight[8];
     private VirtualLight[] virtualLights = new VirtualLight[8];
     private boolean immediateActivation = false;
+    private Camera currentCamera;
 
     /**
      * Maps a virtual light to a GL light.
@@ -35,9 +40,17 @@ public class OpenGLLightManager {
         openGLLights[id].setId(id);
         if (immediateActivation){
             openGLLights[id].enable();
-            openGLLights[id].loadValues();
+            loadLightValues(openGLLights[id]);
         }
         return true;
+    }
+
+    private void loadLightValues(OpenGLLight light){
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+        currentCamera.loadViewMatrix();
+        glPopMatrix();
     }
 
     /**
@@ -54,11 +67,12 @@ public class OpenGLLightManager {
         }
     }
 
-    public void startLighting(){
+    public void startLighting(Camera camera){
+        currentCamera = camera;
         for (int id = 0;id < 8;id++)
             if (openGLLights[id] != null && virtualLights[id] != null){
                 openGLLights[id].enable();
-                openGLLights[id].loadValues();
+                loadLightValues(openGLLights[id]);
             } else if (openGLLights[id] != null){
                 openGLLights[id].disable();
             }
