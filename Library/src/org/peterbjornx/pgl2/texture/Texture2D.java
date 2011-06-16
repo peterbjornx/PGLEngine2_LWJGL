@@ -6,6 +6,8 @@ import org.peterbjornx.pgl2.util.ServerMemoryManager;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 
@@ -31,6 +33,21 @@ public class Texture2D {
     private ByteBuffer pixels;
     private int serverMemoryUsage = 0;
 
+    public Texture2D(int format, BufferedImage image) {
+        this.format = format;
+        width = image.getWidth();
+        height = image.getHeight();
+        int array[] = new int[width*height];
+        image.getRGB(0,0,width,height, array,0,width);
+        for (int texel:array)
+            pixels.put(new byte[]{(byte)(texel >> 16),(byte)(texel >> 8),(byte)texel},0,3);
+        texturePtr = glGenTextures();
+        glTexParameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
+
     public Texture2D(int width, int height, int format, int bufFormat, ByteBuffer pixels) {
         this.width = width;
         this.height = height;
@@ -42,7 +59,6 @@ public class Texture2D {
         glTexParameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
     }
 
     public void glTexParameteri(int id,int value){
