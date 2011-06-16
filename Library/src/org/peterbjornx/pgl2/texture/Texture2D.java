@@ -1,5 +1,6 @@
 package org.peterbjornx.pgl2.texture;
 
+import org.lwjgl.opengl.GL11;
 import org.peterbjornx.pgl2.internal.GLAttribute;
 import org.peterbjornx.pgl2.util.ServerMemoryManager;
 
@@ -28,7 +29,6 @@ public class Texture2D {
     private int format;
     private int bufFormat;
     private ByteBuffer pixels;
-    private LinkedList<GLAttribute> attributes = new LinkedList<GLAttribute>();
     private int serverMemoryUsage = 0;
 
     public Texture2D(int width, int height, int format, int bufFormat, ByteBuffer pixels) {
@@ -38,6 +38,21 @@ public class Texture2D {
         this.bufFormat = bufFormat;
         this.pixels = pixels;
         texturePtr = glGenTextures();
+        glTexParameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    }
+
+    public void glTexParameteri(int id,int value){
+        bind();
+        GL11.glTexParameteri(GL_TEXTURE_2D, id, value);
+    }
+
+    public void glTexParameterf(int id,float value){
+        bind();
+        GL11.glTexParameterf(GL_TEXTURE_2D, id, value);
     }
 
     public void enable(){
