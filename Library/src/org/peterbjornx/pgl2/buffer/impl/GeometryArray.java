@@ -44,7 +44,7 @@ public class GeometryArray implements GeometryBuffer {
      * @param colour   This vector's colour
      * @throws PglException When an attempt is made to write to a geometry buffer already uploaded to the server
      */
-    public void addVertex(Vector3f pos, Vector3f normal, Vector3f texCoord, Color colour) throws PglException {
+    public int addVertex(Vector3f pos, Vector3f normal, Vector3f texCoord, Color colour) throws PglException {
         if (dataTransferred)
             throw new PglException("Tried to modify flipped vertex array");
         vertexBuffer.putFloat(pos.getX());
@@ -62,6 +62,7 @@ public class GeometryArray implements GeometryBuffer {
         vertexBuffer.putFloat(colour.getBlue() / 255.0f);//48 36
         vertexBuffer.putFloat(colour.getAlpha() / 255.0f);//52 40
         vertexCount++;
+        return vertexCount - 1;
     }
 
     /**

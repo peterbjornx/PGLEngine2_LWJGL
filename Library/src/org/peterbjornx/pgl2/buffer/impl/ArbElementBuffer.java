@@ -36,9 +36,9 @@ public class ArbElementBuffer implements ElementBuffer {
     public ArbElementBuffer(int maxSize,int drawMode) throws PglException {
         if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
             throw new PglException("Card does not support ARB VBOs");
+        this.drawMode = drawMode;
         this.elementBuffer = ByteBuffer.allocateDirect(maxSize*sizeof()*4);
         vboPtr = glGenBuffersARB();
-        this.drawMode = drawMode;
     }
 
     private int sizeof() {

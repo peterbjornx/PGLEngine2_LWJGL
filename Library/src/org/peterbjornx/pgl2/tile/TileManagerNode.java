@@ -108,7 +108,7 @@ public class TileManagerNode extends Node{
                 for (TileNode __t : _t)   {
                     if(tileLightingEnabled)
                         activateLightsForTile(__t.getTileY(),__t.getTileX(),__t.getTileZ());
-                    openGLLightManager.startLighting();
+                    openGLLightManager.startLighting(cam);
                     __t.render(cam);
                     openGLLightManager.stopLighting();
                     if(tileLightingEnabled)

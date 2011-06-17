@@ -4,6 +4,8 @@ import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector3f;
 import org.peterbjornx.pgl2.util.PglException;
 
+import java.net.Inet4Address;
+
 /**
  * User: Peter
  * Date: 6/12/11
@@ -20,8 +22,9 @@ public interface GeometryBuffer extends OpenGLBuffer{
      * @param texcoord The texture coordinates for this vector
      * @param colour This vector's colour
      * @throws PglException When an attempt is made to write to a geometry buffer already uploaded to the server
+     * @return The vertex IDX
      */
-    void addVertex(Vector3f pos,Vector3f normal,Vector3f texcoord, Color colour) throws PglException;
+    int addVertex(Vector3f pos,Vector3f normal,Vector3f texcoord, Color colour) throws PglException;
 
     /**
      * Gets the amount of vertices in the buffer
