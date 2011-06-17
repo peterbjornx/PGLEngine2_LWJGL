@@ -37,8 +37,8 @@ public class TerrainLayer {
         int side = terrain.getTerrainSource().getSideSize();
         int totalTiles = side * side;
         int totalPolys = (side-1) * (side-1);
-        geometryBuffer = new StubBuffer(false, GL11.GL_TRIANGLES);//OpenGLBufferFactory.createGeometryBuffer(totalPolys*4,false);
-        elementBuffer = (StubBuffer) geometryBuffer;//OpenGLBufferFactory.createElementBuffer(totalPolys, GL11.GL_QUADS);
+        geometryBuffer = /*new StubBuffer(false, GL11.GL_TRIANGLES);//*/OpenGLBufferFactory.createGeometryBuffer(totalPolys*4,false);
+        elementBuffer = /*(StubBuffer) geometryBuffer;//*/OpenGLBufferFactory.createElementBuffer(totalPolys, GL11.GL_QUADS);
         for (int x = 0;x < side-1;x++)
             for (int z = 0;z < side-1;z++)
                 try {
@@ -70,6 +70,8 @@ public class TerrainLayer {
             vertexList.add(lii[0]);
             vertexList.add(lii[1]);
             vertexList.add(lii[2]);
+            elementBuffer.addPolygon(vertexList);
+            vertexList = new ArrayList<Integer>();
             vertexList.add(lii[1]);
             vertexList.add(lii[3]);
             vertexList.add(lii[2]);
@@ -77,6 +79,8 @@ public class TerrainLayer {
             vertexList.add(lii[0]);
             vertexList.add(lii[1]);
             vertexList.add(lii[3]);
+            elementBuffer.addPolygon(vertexList);
+            vertexList = new ArrayList<Integer>();
             vertexList.add(lii[0]);
             vertexList.add(lii[3]);
             vertexList.add(lii[2]);
