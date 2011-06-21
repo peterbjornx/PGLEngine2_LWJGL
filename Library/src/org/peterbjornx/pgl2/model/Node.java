@@ -50,6 +50,11 @@ public class Node {
         child.parent = this;
     }
 
+    public void remove(Node child){
+        children.remove(child);
+        child.parent = null;
+    }
+
     /**
      * Adds a render control
      * @param control The render control

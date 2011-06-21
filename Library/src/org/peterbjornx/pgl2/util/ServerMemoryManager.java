@@ -50,6 +50,7 @@ public class ServerMemoryManager {
         int bufferPtr = 0;
         if (!arbBufferDeleteQueue.isEmpty()){
             while (!arbBufferDeleteQueue.isEmpty()){
+
                 DeletionRequest d = arbBufferDeleteQueue.remove(0);
                 glObjectIdBuffer[bufferPtr++] = d.id;
                 arbBufferMemory -= d.size;

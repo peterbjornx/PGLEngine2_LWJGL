@@ -3,10 +3,12 @@ package org.peterbjornx.pgl2.buffer.impl;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.ARBVertexBufferObject.*;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GLContext;
 import org.peterbjornx.pgl2.buffer.ElementBuffer;
 import org.peterbjornx.pgl2.util.PglException;
 import org.peterbjornx.pgl2.util.ServerMemoryManager;
+import org.peterbjornx.pgl2.util.memory.DirectBufferManager;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -37,7 +39,7 @@ public class ArbElementBuffer implements ElementBuffer {
         if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
             throw new PglException("Card does not support ARB VBOs");
         this.drawMode = drawMode;
-        this.elementBuffer = ByteBuffer.allocateDirect(maxSize*sizeof()*4);
+        this.elementBuffer = DirectBufferManager.alloc(maxSize * sizeof() * 4);
         vboPtr = glGenBuffersARB();
     }
 
@@ -66,6 +68,7 @@ public class ArbElementBuffer implements ElementBuffer {
             serverMemoryUsage = elementBuffer.limit();
             glBufferDataARB(GL_ELEMENT_ARRAY_BUFFER_ARB, elementBuffer, GL_STATIC_DRAW_ARB);
             ServerMemoryManager.arbBufferMemory += serverMemoryUsage;
+            DirectBufferManager.free(elementBuffer);
             elementBuffer = null;
         }
     }
@@ -109,6 +112,8 @@ public class ArbElementBuffer implements ElementBuffer {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
+        if (elementBuffer != null)
+            DirectBufferManager.free(elementBuffer);
         elementBuffer = null;
         ServerMemoryManager.requestARBBufferDeletion(vboPtr, serverMemoryUsage);
     }

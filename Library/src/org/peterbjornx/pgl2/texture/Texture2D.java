@@ -56,10 +56,11 @@ public class Texture2D {
             pixels.put(new byte[]{(byte)(texel >> 16),(byte)(texel >> 8),(byte)texel},0,3);
         pixels.flip();
         texturePtr = glGenTextures();
+        */
         glTexParameteri(GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);*/
+        glTexParameteri(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     }
 
     public Texture2D(int width, int height, int format, int bufFormat, ByteBuffer pixels) {
@@ -77,13 +78,13 @@ public class Texture2D {
     }
 
     public void glTexParameteri(int id,int value){
-       // bind();
-        //GL11.glTexParameteri(GL_TEXTURE_2D, id, value);
+        bind();
+        GL11.glTexParameteri(GL_TEXTURE_2D, id, value);
     }
 
     public void glTexParameterf(int id,float value){
-       // bind();
-       // GL11.glTexParameterf(GL_TEXTURE_2D, id, value);
+        bind();
+        GL11.glTexParameterf(GL_TEXTURE_2D, id, value);
     }
 
     public void enable(){

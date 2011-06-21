@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.peterbjornx.pgl2.buffer.GeometryBuffer;
 import org.peterbjornx.pgl2.util.PglException;
 import org.peterbjornx.pgl2.util.ServerMemoryManager;
+import org.peterbjornx.pgl2.util.memory.DirectBufferManager;
 
 import java.nio.ByteBuffer;
 
@@ -41,7 +42,7 @@ public class ARBGeometryBuffer implements GeometryBuffer {
         if (!GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
             throw new PglException("Card does not support ARB VBOs");
         this.use3DTextures = use3DTextures;
-        vertexBuffer = BufferUtils.createByteBuffer(maxSize * (use3DTextures ? 52 : 48));
+        vertexBuffer = DirectBufferManager.alloc(maxSize * (use3DTextures ? 52 : 48));
         vboPtr = glGenBuffersARB();
     }
 
@@ -95,6 +96,7 @@ public class ARBGeometryBuffer implements GeometryBuffer {
             serverMemoryUsage = vertexBuffer.limit();
             glBufferDataARB(GL_ARRAY_BUFFER_ARB, vertexBuffer, GL_STATIC_DRAW_ARB);
             ServerMemoryManager.arbBufferMemory += serverMemoryUsage;
+            DirectBufferManager.free(vertexBuffer);
             vertexBuffer = null;
         }
         glVertexPointer(3, GL_FLOAT, use3DTextures ? 52 : 48, 0);
@@ -126,6 +128,8 @@ public class ARBGeometryBuffer implements GeometryBuffer {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
+        if (vertexBuffer != null)
+            DirectBufferManager.free(vertexBuffer);
         vertexBuffer = null;
         ServerMemoryManager.requestARBBufferDeletion(vboPtr, serverMemoryUsage);
     }

@@ -25,7 +25,7 @@ public class OpenGLBufferFactory {
     public static ElementBuffer createElementBuffer(int maxPolygons,int drawType){
         if (GLContext.getCapabilities().GL_ARB_vertex_buffer_object)
             try {
-                return new ArbElementBuffer(maxPolygons,drawType);
+                 return new ArbElementBuffer(maxPolygons,drawType);
             } catch (PglException ignored) {} //Unless caps can suddenly change i dont see this happening.
         else
             return new ElementArray(maxPolygons,drawType);

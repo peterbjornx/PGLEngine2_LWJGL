@@ -106,13 +106,15 @@ public class TileManagerNode extends Node{
         for (TileNode[][] t : tileArray)
             for (TileNode[] _t : t)
                 for (TileNode __t : _t)   {
-                    if(tileLightingEnabled)
+                    if(tileLightingEnabled)  {
                         activateLightsForTile(__t.getTileY(),__t.getTileX(),__t.getTileZ());
-                    openGLLightManager.startLighting(cam);
+                        openGLLightManager.startLighting(cam);
+                    }
                     __t.render(cam);
-                    openGLLightManager.stopLighting();
-                    if(tileLightingEnabled)
+                    if(tileLightingEnabled)  {
+                        openGLLightManager.stopLighting();
                         deactivateLightsForTile(__t.getTileY(), __t.getTileX(), __t.getTileZ());
+                    }
                 }
     }
 

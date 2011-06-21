@@ -1,6 +1,8 @@
 package org.peterbjornx.pgl2.model;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 import org.peterbjornx.pgl2.camera.Camera;
+import org.peterbjornx.pgl2.math.VectorMath;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.peterbjornx.pgl2.gl.GLQM.*;
@@ -31,6 +33,20 @@ public abstract class GeometryNode extends Node{
         glRotateq(getAbsoluteRotation());
 
         renderGeometry(cam);
+
+        glPopMatrix();
+    }
+
+    public void renderAtPoint(float xRotLocal,float xRot,float yRot,float zRot,int x,int y,int z){
+        glMatrixMode(GL11.GL_MODELVIEW); //Never assume clean state so switch to modelview
+        glPushMatrix();//Push matrix so we can recover after render
+      //  glLoadIdentity();
+      //  glRotateq(VectorMath.eulerAnglesToQuaternion(new Vector3f(xRot,yRot,zRot)));
+        glTranslatevf(new Vector3f(x,y,z));
+        glRotateq(VectorMath.axisAngleToQuaternion(new Vector3f(0,1,0),xRotLocal));
+
+
+        renderGeometry(null);
 
         glPopMatrix();
     }
